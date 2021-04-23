@@ -48,7 +48,13 @@ class CorpusBuilder:
         return allQuestions
 
     def getLabeledQuestions(self, siteNameAsLabel=True, questionsPerSite=5000):
-        siteNames = self.getListOfSiteNames()
+        siteNames = []
+        siteNamesFile = 'siteNames.txt'
+        if path.exists(siteNamesFile):
+            with open(siteNamesFile) as f:
+                siteNames = f.read().splitlines()
+        else:
+            siteNames = self.getListOfSiteNames()
         questionsWithLabels = []
         for site in siteNames:
             if (self.getQuestionsCount(site) >= questionsPerSite):
