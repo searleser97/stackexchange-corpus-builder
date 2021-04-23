@@ -83,7 +83,4 @@ class CorpusBuilder:
 
 
 cb = CorpusBuilder()
-labeledQs = cb.getLabeledQuestions(siteNameAsLabel=True, questionsPerSite=10)
-
-for qItem in labeledQs:
-    print(qItem)
+cb.getLabeledQuestions(siteNameAsLabel=True, questionsPerSite=10)
