@@ -14,8 +14,8 @@
   ],
   "main": "src/index.js",
   "bin": {
-    "cpbooster": "dist/index.js",
-    "cpb": "dist/index.js"
+    "stackexchange-corpus-builder": "dist/index.js",
+    "scb": "dist/index.js"
   },
   "target": "node",
   "scripts": {
