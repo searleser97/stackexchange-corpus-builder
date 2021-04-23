@@ -1,6 +1,5 @@
 import requests
 from os import path
-from typing import Any
 
 
 class CorpusBuilder:
