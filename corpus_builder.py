@@ -74,7 +74,7 @@ class CorpusBuilder:
 
         return questionsWithLabels
 
-    def writeLabeledTextForFasttext(labeledQuestion: str):
+    def writeLabeledTextForFasttext(self, labeledQuestion: str):
         with open('output.txt', 'a+') as f:
             labels = ''
             for label in labeledQuestion[0]:
