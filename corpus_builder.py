@@ -54,7 +54,7 @@ class CorpusBuilder:
                 siteNames = f.read().splitlines()
         else:
             siteNames = self.getListOfSiteNames()
-            with open(siteNamesFile, 'w') as f:
+            with open(siteNamesFile, 'w+') as f:
                 sitesStr = ''
                 for site in siteNames:
                     sitesStr += f'{site}\n'
@@ -75,7 +75,7 @@ class CorpusBuilder:
         return questionsWithLabels
 
     def writeLabeledTextForFasttext(labeledQuestion: str):
-        with open('output.txt', 'utf8') as f:
+        with open('output.txt', 'a+') as f:
             labels = ''
             for label in labeledQuestion[0]:
                 labels += f'__label__{label} '
