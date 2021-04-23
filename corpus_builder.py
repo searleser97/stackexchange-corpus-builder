@@ -55,6 +55,11 @@ class CorpusBuilder:
                 siteNames = f.read().splitlines()
         else:
             siteNames = self.getListOfSiteNames()
+            with open(siteNamesFile, 'w') as f:
+                sitesStr = ''
+                for site in siteNames:
+                    sitesStr += f'{site}\n'
+                f.write(sitesStr)
         questionsWithLabels = []
         for site in siteNames:
             if (self.getQuestionsCount(site) >= questionsPerSite):
