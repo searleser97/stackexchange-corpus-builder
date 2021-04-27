@@ -4,8 +4,7 @@ import CorpusBuilder from "./CorpusBuilder";
 
 async function main() {
   let cb = new CorpusBuilder();
-  await cb.init();
-  await cb.downloadCSVs();
+  await cb.downloadCSVs(["sports"]);
   //cb.login();
 }
 
