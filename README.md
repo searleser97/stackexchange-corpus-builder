@@ -1,7 +1,14 @@
 # stackexchange-corpus-builder
 
-Run:
+## Build from source:
 
+1. `git clone https://github.com/searleser97/stackexchange-corpus-builder`
+2. `cd stackexchange-corpus-builder`
+3. `npm run install:dev`
+
+## Usage
+
+Run:
 ```shell
 scb
 ```
