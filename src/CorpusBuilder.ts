@@ -86,6 +86,7 @@ export default class CorpusBuilder {
   }
 
   async downloadAllCSVs(siteNames: string[]) {
+    console.log("corpus recopilation started");
     let browser = await chromium.launch({ headless: true });
     const context = await this.restoreSession(browser);
     try {
@@ -105,7 +106,6 @@ export default class CorpusBuilder {
     context: ChromiumBrowserContext,
     rowsCount: number = 5000
   ) {
-    console.log("corpus recopilation started");
     const pages = context.pages();
     let page = pages.length > 0 ? pages[0] : await context.newPage();
 
