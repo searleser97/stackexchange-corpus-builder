@@ -85,10 +85,26 @@ export default class CorpusBuilder {
     }
   }
 
-  async downloadCSVs(siteNames: string[]) {
+  async downloadAllCSVs(siteNames: string[]) {
     let browser = await chromium.launch({ headless: true });
     const context = await this.restoreSession(browser);
+    try {
+      for (let siteName of siteNames) {
+        await this.downloadSiteCSV(siteName, context);
+      }
+      await this.saveSession(context);
+      await browser.close();
+    } catch (e) {
+      console.log(e);
+      exit(0);
+    }
+  }
 
+  async downloadSiteCSV(
+    siteName: string,
+    context: ChromiumBrowserContext,
+    rowsCount: number = 5000
+  ) {
     const pages = context.pages();
     let page = pages.length > 0 ? pages[0] : await context.newPage();
 
@@ -100,37 +116,34 @@ export default class CorpusBuilder {
       }
     });
 
-    await page.goto(this.startUrl);
+    const siteUrl = `https://data.stackexchange.com/${siteName}/query/new`;
+
+    await page.goto(siteUrl);
 
     if (!(await this.isLoggedIn(page))) {
       await this.login();
       await context.clearCookies();
       await context.addCookies(this.getSession());
-      await page.goto(this.startUrl);
+      await page.goto(siteUrl);
     }
 
-    try {
-      let editorPanelElem = await page.$(".CodeMirror-lines");
-      await editorPanelElem.click();
-      await page.keyboard.type("select title, tags from posts;");
-      let submitElem = await page.$("#submit-query");
-      await submitElem.click();
-      const [download] = await Promise.all([
-        page.waitForEvent("download"), // wait for download to start
-        page.click("#resultSetsButton")
-      ]);
+    let editorPanelElem = await page.$(".CodeMirror-lines");
+    await editorPanelElem.click();
+    await page.keyboard.type(
+      `select top(${rowsCount}) title, tags from posts where title is not null;`
+    );
+    let submitElem = await page.$("#submit-query");
+    await submitElem.click();
+    const [download] = await Promise.all([
+      page.waitForEvent("download"), // wait for download to start
+      page.click("#resultSetsButton")
+    ]);
 
-      if (!fs.existsSync(this.corpus_CSVs)) {
-        fs.mkdirSync(this.corpus_CSVs, { recursive: true });
-      }
-
-      await download.saveAs(path.join(this.corpus_CSVs, "sports.csv"));
-      console.log(download.url());
-      await this.saveSession(context);
-      await browser.close();
-    } catch (e) {
-      console.log(e);
-      exit(0);
+    if (!fs.existsSync(this.corpus_CSVs)) {
+      fs.mkdirSync(this.corpus_CSVs, { recursive: true });
     }
+
+    await download.saveAs(path.join(this.corpus_CSVs, siteName));
+    console.log(download.url());
   }
 }
