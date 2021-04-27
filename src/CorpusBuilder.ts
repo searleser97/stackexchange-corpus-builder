@@ -90,7 +90,8 @@ export default class CorpusBuilder {
     let browser = await chromium.launch({ headless: true });
     const context = await this.restoreSession(browser);
     try {
-      for (let siteName of siteNames) {
+      for (let i = 27; i < siteNames.length; i++) {
+        const siteName = siteNames[i];
         await this.downloadSiteCSV(siteName, context);
       }
       await this.saveSession(context);
@@ -128,23 +129,27 @@ export default class CorpusBuilder {
       await page.goto(siteUrl);
     }
 
-    let editorPanelElem = await page.$(".CodeMirror-lines");
-    await editorPanelElem.click();
-    await page.keyboard.type(
-      `select top(${rowsCount}) title, tags from posts where title is not null;`
-    );
-    let submitElem = await page.$("#submit-query");
-    await submitElem.click();
-    const [download] = await Promise.all([
-      page.waitForEvent("download"), // wait for download to start
-      page.click("#resultSetsButton")
-    ]);
+    try {
+      let editorPanelElem = await page.$(".CodeMirror-lines");
+      await editorPanelElem.click();
+      await page.keyboard.type(
+        `select top(${rowsCount}) title, tags from posts where title is not null;`
+      );
+      let submitElem = await page.$("#submit-query");
+      await submitElem.click();
+      const [download] = await Promise.all([
+        page.waitForEvent("download"), // wait for download to start
+        page.click("#resultSetsButton")
+      ]);
 
-    if (!fs.existsSync(this.corpus_CSVs)) {
-      fs.mkdirSync(this.corpus_CSVs, { recursive: true });
+      if (!fs.existsSync(this.corpus_CSVs)) {
+        fs.mkdirSync(this.corpus_CSVs, { recursive: true });
+      }
+
+      await download.saveAs(path.join(this.corpus_CSVs, `${siteName}.csv`));
+      console.log(download.url());
+    } catch (e) {
+      console.log(`Could not process ${siteName}`);
     }
-
-    await download.saveAs(path.join(this.corpus_CSVs, `${siteName}.csv`));
-    console.log(download.url());
   }
 }
