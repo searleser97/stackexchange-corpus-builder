@@ -105,6 +105,7 @@ export default class CorpusBuilder {
     context: ChromiumBrowserContext,
     rowsCount: number = 5000
   ) {
+    console.log("corpus recopilation started");
     const pages = context.pages();
     let page = pages.length > 0 ? pages[0] : await context.newPage();
 
@@ -143,7 +144,7 @@ export default class CorpusBuilder {
       fs.mkdirSync(this.corpus_CSVs, { recursive: true });
     }
 
-    await download.saveAs(path.join(this.corpus_CSVs, siteName));
+    await download.saveAs(path.join(this.corpus_CSVs, `${siteName}.csv`));
     console.log(download.url());
   }
 }
