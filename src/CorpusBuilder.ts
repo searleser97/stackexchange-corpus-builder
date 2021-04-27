@@ -9,6 +9,7 @@ export default class CorpusBuilder {
   readonly loginUrl = "https://data.stackexchange.com/account/login";
   readonly startUrl = "https://data.stackexchange.com/sports/query/new";
   readonly corpus_CSVs = "corpus_CSVs";
+  readonly blockedResourcesOnSubmit: Set<string> = new Set(["image", "stylesheet", "font"]);
 
   getSession(): Array<{
     name: string;
@@ -91,13 +92,13 @@ export default class CorpusBuilder {
     const pages = context.pages();
     let page = pages.length > 0 ? pages[0] : await context.newPage();
 
-    //await page.route("**/*", (route) => {
-    //if (this.blockedResourcesOnSubmit.has(route.request().resourceType())) {
-    //route.abort();
-    //} else {
-    //route.continue();
-    //}
-    //});
+    await page.route("**/*", (route) => {
+      if (this.blockedResourcesOnSubmit.has(route.request().resourceType())) {
+        route.abort();
+      } else {
+        route.continue();
+      }
+    });
 
     await page.goto(this.startUrl);
 
@@ -124,14 +125,11 @@ export default class CorpusBuilder {
       }
 
       await download.saveAs(path.join(this.corpus_CSVs, "sports.csv"));
-      // wait for download to complete
-      console.log(await download.path());
       console.log(download.url());
       await this.saveSession(context);
       await browser.close();
     } catch (e) {
       console.log(e);
-      console.log("Error: File was not submitted");
       exit(0);
     }
   }
