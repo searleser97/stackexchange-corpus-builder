@@ -9,7 +9,7 @@ export default class CorpusBuilder {
   readonly loginUrl = "https://data.stackexchange.com/account/login";
   readonly startUrl = "https://data.stackexchange.com/sports/query/new";
   readonly corpus_CSVs = "corpus_CSVs";
-  readonly blockedResourcesOnSubmit: Set<string> = new Set(["image", "stylesheet", "font"]);
+  readonly blockedResourcesOnSubmit: Set<string> = new Set(["image", "font"]);
 
   getSession(): Array<{
     name: string;
@@ -86,7 +86,7 @@ export default class CorpusBuilder {
   }
 
   async downloadCSVs(siteNames: string[]) {
-    let browser = await chromium.launch({ headless: false });
+    let browser = await chromium.launch({ headless: true });
     const context = await this.restoreSession(browser);
 
     const pages = context.pages();
