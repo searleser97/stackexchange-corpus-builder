@@ -29,7 +29,6 @@ ebooks
 economics
 electronics
 ethereum
-expatriates
 fitness
 gaming
 gardening

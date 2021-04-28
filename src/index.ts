@@ -32,16 +32,18 @@ async function getSiteNames(forceRequest?: boolean) {
   }
 }
 
-function getProcessedLine(line: string) {
+function getProcessedLine(line: string, fileName: string) {
   let delimiterIndex = line.lastIndexOf(",");
   let col1 = line.substring(0, delimiterIndex);
   let col2 = line.substring(delimiterIndex + 1);
   let tagsArray = col2.match(/[a-zA-Z0-9_\-]+/g);
   let output = "";
   if (tagsArray) {
-    for (let tag of tagsArray) {
-      output += "__label__" + tag + " ";
-    }
+    output += "__label__" + fileName + " ";
+    output += "__label__" + tagsArray[0] + " ";
+    //for (let tag of tagsArray) {
+    //output += "__label__" + tag + " ";
+    //}
     output += col1 + "\n";
   }
   return output;
@@ -61,7 +63,8 @@ async function CSVsToFasttextFormat(csvsDir: string, rowsCountPerCSV: number = 5
     let line: false | Buffer;
     while ((line = liner.next())) {
       if (lineIndex > 0) {
-        const thisLine = getProcessedLine(line.toString());
+        const fileName = path.basename(csvFile, ".csv");
+        const thisLine = getProcessedLine(line.toString(), fileName);
         if (thisLine.length > 0) {
           lines += thisLine;
         }
@@ -72,7 +75,7 @@ async function CSVsToFasttextFormat(csvsDir: string, rowsCountPerCSV: number = 5
       lineIndex++;
     }
     console.log(lineIndex, rowsCountPerCSV);
-    if (lineIndex === rowsCountPerCSV) {
+    if (lines.length > 0) {
       fs.appendFileSync("fasttext_formatted_corpus.txt", lines);
     }
   }
