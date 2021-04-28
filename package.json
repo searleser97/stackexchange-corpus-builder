@@ -39,9 +39,13 @@
     "typescript": "^3.9.6"
   },
   "dependencies": {
+    "@types/line-reader": "^0.0.33",
+    "@types/n-readlines": "^1.0.1",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "express": "^4.17.1",
+    "line-reader": "^0.4.0",
+    "n-readlines": "^1.0.1",
     "playwright-chromium": "^1.9.1",
     "update-notifier": "^4.1.0",
     "yargs": "^15.4.0"
