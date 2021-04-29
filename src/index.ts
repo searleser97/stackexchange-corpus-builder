@@ -40,7 +40,7 @@ function getProcessedLine(line: string, fileName: string) {
   let output = "";
   if (tagsArray) {
     output += "__label__" + fileName + " ";
-    output += "__label__" + tagsArray[0] + " ";
+    //output += "__label__" + tagsArray[0] + " ";
     //for (let tag of tagsArray) {
     //output += "__label__" + tag + " ";
     //}
