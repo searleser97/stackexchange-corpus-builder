@@ -1,6 +1,7 @@
 # stackexchange-corpus-builder
 
 **CLI** utility that facilitates the recopilation of a corpus based on _Stack Exchange_ sites.
+Sentences with their corresponding labels are stored in 'csv' files.
 
 ## Build from source:
 
