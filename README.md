@@ -1,5 +1,7 @@
 # stackexchange-corpus-builder
 
+**CLI** utility that facilitates the recopilation of a corpus based on _Stack Exchange_ sites.
+
 ## Build from source:
 
 1. `git clone https://github.com/searleser97/stackexchange-corpus-builder`
